@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     build: php/
-    container_name: lemp_php
+    container_name: lemp_php_T
     volumes:
       - ./public_html/:/var/www/html
     expose:
@@ -28,7 +28,7 @@ services:
 
   nginx:
     image: nginx:stable-alpine
-    container_name: lemp_nginx
+    container_name: lemp_nginx_T
     volumes:
       - ./public_html/:/var/www/html
       - ./nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
