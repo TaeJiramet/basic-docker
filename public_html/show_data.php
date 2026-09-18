@@ -1,12 +1,11 @@
 <?php
-// 1. ปรับค่าการเชื่อมต่อให้ตรงกับ docker-compose.yml
-$host = 'db';           // ใช้ชื่อ Service 'db' ใน Docker
-$dbname = 'sample_db';    // เปลี่ยนเป็น sample_db ตามไฟล์ .yml ล่าสุด
-$username = 'admin';
-$password = '1234';
+$host = 'db';
+$db = 'sample_db';
+$user = 'admin';
+$pass = '1234';
 $charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -15,15 +14,12 @@ $options = [
 ];
 
 try {
-    // 2. สร้างการเชื่อมต่อแบบ PDO
-    $pdo = new PDO($dsn, $username, $password, $options);
+    $pdo = new PDO($dsn, $user, $pass, $options);
 
-    // 3. ดึงข้อมูลด้วย Prepared Statement
+    // ดึงข้อมูลจากตาราง titanic
     $sql = "SELECT * FROM titanic";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
-
-    // ดึงข้อมูลทั้งหมดมาไว้ในตัวแปร $rows
     $rows = $stmt->fetchAll();
 
 } catch (PDOException $e) {
@@ -37,7 +33,6 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Titanic Data</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -45,7 +40,6 @@ try {
     <div class="container-fluid mt-5 px-4">
         <h2 class="text-center mb-4">Titanic Passenger Data</h2>
 
-        <!-- 4. เปลี่ยนเงื่อนไขเช็คจำนวนแถว -->
         <?php if (count($rows) > 0): ?>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered align-middle">
@@ -67,7 +61,6 @@ try {
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- 5. เปลี่ยนมาใช้ foreach ในการวนลูป -->
                         <?php foreach ($rows as $row): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($row['index'] ?? ''); ?></td>
@@ -92,7 +85,6 @@ try {
             <p class="text-center">No records found in the Titanic table.</p>
         <?php endif; ?>
     </div>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

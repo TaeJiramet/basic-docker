@@ -4,16 +4,15 @@ services:
     container_name: lemp_mariadb
     volumes:
       - ./mariadb/initdb/:/docker-entrypoint-initdb.d
-      - ./mariadb/data/:/var/lib/mysql/
     environment:
       - MYSQL_ROOT_PASSWORD=1234
       - MYSQL_DATABASE=sample_db
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=1234
     restart: always
-    # restart: unless-stopped
     networks:
-      - web_network
+      - my-network
+
   php:
     depends_on:
       - db
@@ -25,7 +24,8 @@ services:
       - "9000"
     restart: always
     networks:
-      - web_network
+      - my-network
+
   nginx:
     image: nginx:stable-alpine
     container_name: lemp_nginx
@@ -34,11 +34,11 @@ services:
       - ./nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     ports:
-      - "88:80"
+      - "8804:80"  
     restart: always
     networks:
-      - web_network
+      - my-network
+
 networks:
-  web_network:
-    name: lemp
-    driver: bridge
+  my-network:
+    external: true  
