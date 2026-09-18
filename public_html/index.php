@@ -1,10 +1,23 @@
 <?php
-$servername = "db";
-$username = "admin";
-$password = "1234";
-$dbhandle = mysqli_connect($servername, $username, $password);
-$selected = mysqli_select_db($dbhandle, "titanic");
+$host = 'db';
+$db = 'titanic';
+$user = 'admin';
+$pass = '1234';
+$charset = 'utf8mb4';
 
-echo "Connected database server<br>";
-echo "Selected database";
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+
+$options = [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES => false,
+];
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, $options);
+    echo "Connected database server<br>";
+    echo "Selected database";
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
 ?>
